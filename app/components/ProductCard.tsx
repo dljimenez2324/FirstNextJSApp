@@ -4,6 +4,7 @@ import AddToCart from './AddToCart'
 
 const ProductCard = () => {
   return (
+    
     // <button onClick={() => console.log("Clicked")}>Add to Cart</button>
     // <div className={styles.card}>
     // <div className='p-5 my-5 bg-sky-400 text-white text-xl hover:bg-sky-500'>
