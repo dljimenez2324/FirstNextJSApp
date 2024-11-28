@@ -16,7 +16,8 @@ interface Props {
 const UserTable = async ({sortOrder}:Props) => {
 
     const response = await fetch('https://jsonplaceholder.typicode.com/users', {
-        next: { revalidate: 10 }
+        // next: { revalidate: 10 }  // this was only to revalidate every 10 seconds but we will not use this  normal use would be say a day or whatever use you need
+        
     });
 
     const users: User[] = await response.json();  // this is our array of users take from the api
