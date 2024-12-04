@@ -6,15 +6,14 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import schema from "./schema";
+import prisma from "@/prisma/client";
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
 
     // fetch users from a database
+    const users = await prisma.user.findMany()
     // hard code our data for now
-    return NextResponse.json([
-        {id: 1, name: "Jacob"},
-        {id: 2, name: "Jose"},
-    ])
+    return NextResponse.json(users)
 
 }
 
