@@ -13,6 +13,7 @@ import prisma from "@/prisma/client";
 // }
 
 // we can destructure and create our props inside inline like this  (use this for when you have one prop or two  anymore then do a traditional interface)
+// SINGLE USER
 export async function GET(request: NextRequest, {params}:{params:{id:string}}) {
 
     // fetch the data from our db using prisma
@@ -27,7 +28,8 @@ export async function GET(request: NextRequest, {params}:{params:{id:string}}) {
         return NextResponse.json(user)
 }
 
-export async function PUT(request: NextRequest, {params}:{params:{id:number}}) {
+
+export async function PUT(request: NextRequest, {params}:{params:{id:string}}) {
     // validate the request of the body
     const body = await request.json();
 
@@ -38,23 +40,39 @@ export async function PUT(request: NextRequest, {params}:{params:{id:number}}) {
     if(!validation.success)
         return NextResponse.json(validation.error.errors, {status: 400})
 
+    const user = await prisma.user.findUnique({
+        where: {id: parseInt(params.id)}
+    })
     // if doesnt exist, return 404
-    if(params.id > 10)
+    if(!user)
         return NextResponse.json ({error: "User not found"}, {status: 404})
 
     // fetch the user with the given id
+    const updatedUser = await prisma.user.update({
+        where: {id: user.id},
+        data: {
+            name: body.name,
+            email: body.email,
+        }
+    })
     //// if true / is valid then update the user
-    return NextResponse.json({id:1, name: body.name});
     //// return the updated user
+    return NextResponse.json(updatedUser);
 
 }
 
-export function DELETE(request: NextRequest, {params}:{params:{id:number}}) {
+export async function DELETE(request: NextRequest, {params}:{params:{id:string}}) {
     // we would already have our fetched data from user db
+    const user = await prisma.user.findUnique({
+        where: {id: parseInt(params.id)}
+    })
     // if not found 404
-    if(params.id > 10)
+    if(!user)
         return NextResponse.json({error: "user not found"},{status: 404})
     // delete the user db
+        await prisma.user.delete({
+            where: {id: user.id}
+        })
         return NextResponse.json({})
     // return 200 request
 
